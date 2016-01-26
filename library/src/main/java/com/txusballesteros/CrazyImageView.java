@@ -38,8 +38,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CrazyImageView extends View {
-    private final static int DEFAULT_NUM_OF_COLUMNS = 7;
-    private final static int DEFAULT_NUM_OF_ROWS = 15;
+    private final static int DEFAULT_NUM_OF_COLUMNS = 15;
+    private final static int DEFAULT_NUM_OF_ROWS = 30;
     private final static float RECT_PADDING_IN_DP = 1;
     private int numOfColumns = DEFAULT_NUM_OF_COLUMNS;
     private int numOfRows = DEFAULT_NUM_OF_ROWS;
@@ -88,7 +88,8 @@ public class CrazyImageView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_MOVE) {
+        if (event.getAction() == MotionEvent.ACTION_MOVE ||
+            event.getAction() == MotionEvent.ACTION_UP) {
             for (int pointer = 0; pointer < event.getPointerCount(); pointer++) {
                 float eventX = event.getX(pointer);
                 float eventY = event.getY(pointer);
