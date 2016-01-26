@@ -94,7 +94,7 @@ public class CrazyImageView extends View {
                 float eventY = event.getY(pointer);
                 for (RectController controller : rectControllers) {
                     if (controller.contains(eventX, eventY)) {
-                        controller.flip(RectController.FLIP_LEFT_TO_RIGHT);
+                        controller.flip(RectController.FLIP_HORIZONTAL);
                     }
                 }
             }

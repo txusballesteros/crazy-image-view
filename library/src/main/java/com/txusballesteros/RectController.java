@@ -32,14 +32,15 @@ import android.graphics.RectF;
 import android.view.animation.LinearInterpolator;
 
 class RectController {
-    final static int FLIP_LEFT_TO_RIGHT = 1;
-    final static int FLIP_RIGHT_TO_LEFT = 2;
-    final static int FLIP_TOP_TO_BOTTOM = 3;
-    final static int FLIP_BOTTOM_TO_TOP = 4;
+    final static int FLIP_HORIZONTAL = 1;
+    final static int FLIP_VERTICAL = 2;
     private final static int DEFAULT_ANIMATION_DURATION_IN_MS = 300;
-    private final static int DEFAULT_FOREGROUND_COLOR = 0xffFF5900;
+    private final static int DEFAULT_FOREGROUND_COLOR = 0xffC4E7F2;
+    private final static int DEFAULT_BACKGROUND_COLOR = 0xff1B9494;
     private int foregroundColor = DEFAULT_FOREGROUND_COLOR;
+    private int backgroundColor = DEFAULT_BACKGROUND_COLOR;
     private Paint foregroundPaint;
+    private Paint backgroundPaint;
     private final CrazyImageView owner;
     private final RectF area;
     private boolean flipInProgress = false;
@@ -56,6 +57,9 @@ class RectController {
         foregroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         foregroundPaint.setStyle(Paint.Style.FILL);
         foregroundPaint.setColor(foregroundColor);
+        backgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        backgroundPaint.setStyle(Paint.Style.FILL);
+        backgroundPaint.setColor(backgroundColor);
     }
 
     boolean contains(float x, float y) {
@@ -65,16 +69,10 @@ class RectController {
     void flip(int direction) {
         if (!flipInProgress) {
             switch (direction) {
-                case FLIP_LEFT_TO_RIGHT:
+                case FLIP_HORIZONTAL:
                     performLeftToRightFlip();
                     break;
-                case FLIP_RIGHT_TO_LEFT:
-                    performLeftToRightFlip();
-                    break;
-                case FLIP_TOP_TO_BOTTOM:
-                    performTopToBottomFlip();
-                    break;
-                case FLIP_BOTTOM_TO_TOP:
+                case FLIP_VERTICAL:
                     performTopToBottomFlip();
                     break;
             }
@@ -106,7 +104,13 @@ class RectController {
     }
 
     private ValueAnimator getDefaultAnimator() {
-        ValueAnimator animator = ValueAnimator.ofFloat(-1f, 1f);
+        float startValue = -1f;
+        float finalValue = 1f;
+        if (horizontalFlipValue == 1f || verticalFlipValue == 1f) {
+            startValue = 1f;
+            finalValue = -1f;
+        }
+        ValueAnimator animator = ValueAnimator.ofFloat(startValue, finalValue);
         animator.setDuration(DEFAULT_ANIMATION_DURATION_IN_MS);
         animator.setInterpolator(new LinearInterpolator());
         animator.addListener(new Animator.AnimatorListener() {
@@ -138,7 +142,11 @@ class RectController {
         float right = (area.centerX() + (width / 2));
         float top = (area.centerY() - (height / 2));
         float bottom = (area.centerY() + (height / 2));
-        canvas.drawRect(left, top, right, bottom, foregroundPaint);
+        if (horizontalFlipValue < 0f && verticalFlipValue < 0f) {
+            canvas.drawRect(left, top, right, bottom, foregroundPaint);
+        } else {
+            canvas.drawRect(left, top, right, bottom, backgroundPaint);
+        }
         canvas.restore();
     }
 }
