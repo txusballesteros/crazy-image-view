@@ -34,7 +34,6 @@ public class TouchController {
                     lastEventY = event.getY();
                 }
                 listener.onTouchCommand(event, lastAction);
-
                 break;
         }
     }

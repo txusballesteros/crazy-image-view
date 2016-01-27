@@ -24,6 +24,7 @@
  * Contact: Txus Ballesteros <txus.ballesteros@gmail.com>
 -->
 <resources>
+    <color name="background_color">#ff000000</color>
     <color name="foreground_start_color">#ffF54900</color>
     <color name="foreground_end_color">#ffFA773E</color>
     <color name="background_start_color">#ff0049f5</color>

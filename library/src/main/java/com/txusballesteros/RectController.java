@@ -29,7 +29,7 @@ import android.animation.ValueAnimator;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.RectF;
-import android.view.animation.LinearInterpolator;
+import android.view.animation.DecelerateInterpolator;
 
 class RectController {
     final static int FLIP_HORIZONTAL = 1;
@@ -42,6 +42,7 @@ class RectController {
     private boolean flipInProgress = false;
     private float horizontalFlipValue = -1f;
     private float verticalFlipValue = -1f;
+    private int flipDirection = FLIP_HORIZONTAL;
 
     public RectController(CrazyImageView owner, RectF area, Bitmap foregroundBitmap, Bitmap backgroundBitmap) {
         this.owner = owner;
@@ -56,6 +57,7 @@ class RectController {
 
     void flip(int direction) {
         if (!flipInProgress) {
+            flipDirection = direction;
             switch (direction) {
                 case FLIP_HORIZONTAL:
                     performLeftToRightFlip();
@@ -100,7 +102,7 @@ class RectController {
         }
         ValueAnimator animator = ValueAnimator.ofFloat(startValue, finalValue);
         animator.setDuration(DEFAULT_ANIMATION_DURATION_IN_MS);
-        animator.setInterpolator(new LinearInterpolator());
+        animator.setInterpolator(new DecelerateInterpolator());
         animator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
@@ -129,7 +131,8 @@ class RectController {
         float top = (area.centerY() - (height / 2));
         float bottom = (area.centerY() + (height / 2));
         Bitmap currentBitmap;
-        if (horizontalFlipValue < 0f && verticalFlipValue < 0f) {
+        if ((flipDirection == FLIP_HORIZONTAL && horizontalFlipValue < 0f) ||
+            (flipDirection == FLIP_VERTICAL && verticalFlipValue < 0f)) {
             currentBitmap = foregroundBitmap;
         } else {
             currentBitmap = backgroundBitmap;
