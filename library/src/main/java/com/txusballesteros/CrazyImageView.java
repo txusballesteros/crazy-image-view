@@ -26,8 +26,14 @@ package com.txusballesteros;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapRegionDecoder;
 import android.graphics.Canvas;
 import android.graphics.RectF;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -44,6 +50,8 @@ public class CrazyImageView extends View {
     private int numOfColumns = DEFAULT_NUM_OF_COLUMNS;
     private int numOfRows = DEFAULT_NUM_OF_ROWS;
     private float rectPadding = dp2px(RECT_PADDING_IN_DP);
+    private Drawable foregroundDrawable;
+    private Bitmap foregroundBitmap;
     private List<RectController> rectControllers = new ArrayList<>();
 
     public CrazyImageView(Context context) {
@@ -53,18 +61,36 @@ public class CrazyImageView extends View {
 
     public CrazyImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        readAttributes(attrs);
         initializeView();
     }
 
     public CrazyImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        readAttributes(attrs);
         initializeView();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public CrazyImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        readAttributes(attrs);
         initializeView();
+    }
+
+    private void readAttributes(AttributeSet attrs) {
+        if (attrs != null) {
+            TypedArray attributes = getContext()
+                    .getTheme().obtainStyledAttributes(attrs, R.styleable.CrazyImageView, 0, 0);
+            numOfColumns = attributes.getInteger(R.styleable.CrazyImageView_columns, numOfColumns);
+            numOfRows = attributes.getInteger(R.styleable.CrazyImageView_rows, numOfRows);
+            foregroundDrawable = attributes.getDrawable(R.styleable.CrazyImageView_foregroundSrc);
+            if (foregroundDrawable == null) {
+                int defaultForegroundColor = getResources().getColor(R.color.default_foreground_color);
+                foregroundDrawable = new ColorDrawable(defaultForegroundColor);
+            }
+            attributes.recycle();
+        }
     }
 
     private void initializeView() {
@@ -82,6 +108,7 @@ public class CrazyImageView extends View {
     protected void onSizeChanged(int width, int height, int oldw, int oldh) {
         super.onSizeChanged(width, height, oldw, oldh);
         if (width > 0 && height > 0) {
+            buildForegroundBitmap();
             calculateAreas(width, height);
         }
     }
@@ -103,6 +130,24 @@ public class CrazyImageView extends View {
         return super.onTouchEvent(event);
     }
 
+    @Override
+    protected void onDetachedFromWindow() {
+        foregroundBitmap.recycle();
+        foregroundBitmap = null;
+        super.onDetachedFromWindow();
+    }
+
+    private void buildForegroundBitmap() {
+        foregroundBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+        final Canvas canvas = new Canvas(foregroundBitmap);
+        foregroundDrawable.setBounds(0, 0, getWidth(), getHeight());
+        foregroundDrawable.draw(canvas);
+    }
+
+    private Bitmap getForegroundBitmapRectArea(float x, float y, float width, float height) {
+        return Bitmap.createBitmap(foregroundBitmap, (int)x, (int)y, (int)width, (int)height);
+    }
+
     private void calculateAreas(float viewWidth, float viewHeight) {
         rectControllers.clear();
         float totalHorizontalPadding = rectPadding * (numOfColumns - 1);
@@ -119,7 +164,13 @@ public class CrazyImageView extends View {
                 float top = currentY;
                 float bottom = currentY + rectHeight;
                 float right = currentX + rectWidth;
-                rectControllers.add(new RectController(this, new RectF(left, top, right, bottom)));
+                final RectF areaRect = new RectF(left, top, right, bottom);
+                final Bitmap foregroundAreaBitmap
+                        = getForegroundBitmapRectArea(areaRect.left,
+                                                      areaRect.top,
+                                                      areaRect.width(),
+                                                      areaRect.height());
+                rectControllers.add(new RectController(this, areaRect, foregroundAreaBitmap));
             }
         }
     }

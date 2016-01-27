@@ -26,6 +26,7 @@ package com.txusballesteros;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
@@ -35,28 +36,24 @@ class RectController {
     final static int FLIP_HORIZONTAL = 1;
     final static int FLIP_VERTICAL = 2;
     private final static int DEFAULT_ANIMATION_DURATION_IN_MS = 300;
-    private final static int DEFAULT_FOREGROUND_COLOR = 0xffC4E7F2;
     private final static int DEFAULT_BACKGROUND_COLOR = 0xff1B9494;
-    private int foregroundColor = DEFAULT_FOREGROUND_COLOR;
     private int backgroundColor = DEFAULT_BACKGROUND_COLOR;
-    private Paint foregroundPaint;
     private Paint backgroundPaint;
     private final CrazyImageView owner;
     private final RectF area;
+    private final Bitmap foregroundBitmap;
     private boolean flipInProgress = false;
     private float horizontalFlipValue = -1f;
     private float verticalFlipValue = -1f;
 
-    public RectController(CrazyImageView owner, RectF area) {
+    public RectController(CrazyImageView owner, RectF area, Bitmap foregroundBitmap) {
         this.owner = owner;
         this.area = area;
+        this.foregroundBitmap = foregroundBitmap;
         initializePaints();
     }
 
     private void initializePaints() {
-        foregroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        foregroundPaint.setStyle(Paint.Style.FILL);
-        foregroundPaint.setColor(foregroundColor);
         backgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         backgroundPaint.setStyle(Paint.Style.FILL);
         backgroundPaint.setColor(backgroundColor);
@@ -143,7 +140,7 @@ class RectController {
         float top = (area.centerY() - (height / 2));
         float bottom = (area.centerY() + (height / 2));
         if (horizontalFlipValue < 0f && verticalFlipValue < 0f) {
-            canvas.drawRect(left, top, right, bottom, foregroundPaint);
+            canvas.drawBitmap(foregroundBitmap, left, top, null);
         } else {
             canvas.drawRect(left, top, right, bottom, backgroundPaint);
         }

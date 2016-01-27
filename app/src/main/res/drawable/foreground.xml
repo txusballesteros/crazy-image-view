@@ -23,17 +23,10 @@
  *
  * Contact: Txus Ballesteros <txus.ballesteros@gmail.com>
 -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <com.txusballesteros.CrazyImageView
-        android:id="@+id/crazyImageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:foregroundSrc="@drawable/foreground"
-        app:columns="15"
-        app:rows="30" />
-
-</FrameLayout>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:type="linear"
+        android:angle="90"
+        android:startColor="@color/foreground_start_color"
+        android:endColor="@color/foreground_end_color"/>
+</shape>
