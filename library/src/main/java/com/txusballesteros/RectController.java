@@ -134,10 +134,8 @@ class RectController {
         Bitmap currentBitmap;
         if (horizontalFlipValue < 0f && verticalFlipValue < 0f) {
             currentBitmap = buildBitmap(foregroundBitmap);
-//            currentBitmap = foregroundBitmap;
         } else {
             currentBitmap = buildBitmap(backgroundBitmap);
-//            currentBitmap = backgroundBitmap;
         }
         if (currentBitmap != null) {
             canvas.drawBitmap(currentBitmap, left, top, null);
@@ -151,8 +149,8 @@ class RectController {
         float height = source.getHeight() * Math.abs(verticalFlipValue);
         float x = ((source.getWidth() - width) / 2);
         float y = ((source.getHeight() - height) / 2);
-        if (width > 0 && height > 0) {
-            result = Bitmap.createBitmap(source, (int) x, (int) y, (int) width, (int) height);
+        if ((int)width > 0 && (int)height > 0) {
+            result = Bitmap.createBitmap(source, (int) x, (int) y, (int)width, (int)height);
         }
         return result;
     }
