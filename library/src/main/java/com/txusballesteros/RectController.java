@@ -28,6 +28,7 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.view.animation.LinearInterpolator;
@@ -114,44 +115,30 @@ class RectController {
             }
 
             @Override
-            public void onAnimationCancel(Animator animation) {
-            }
+            public void onAnimationCancel(Animator animation) { }
 
             @Override
-            public void onAnimationRepeat(Animator animation) {
-            }
+            public void onAnimationRepeat(Animator animation) { }
         });
         return animator;
     }
 
     void onDraw(Canvas canvas) {
-        canvas.save();
-        canvas.clipRect(area);
         float width = area.width() * Math.abs(horizontalFlipValue);
         float height = area.height() * Math.abs(verticalFlipValue);
         float left = (area.centerX() - (width / 2));
+        float right = (area.centerX() + (width / 2));
         float top = (area.centerY() - (height / 2));
+        float bottom = (area.centerY() + (height / 2));
         Bitmap currentBitmap;
         if (horizontalFlipValue < 0f && verticalFlipValue < 0f) {
-            currentBitmap = buildBitmap(foregroundBitmap);
+            currentBitmap = foregroundBitmap;
         } else {
-            currentBitmap = buildBitmap(backgroundBitmap);
+            currentBitmap = backgroundBitmap;
         }
-        if (currentBitmap != null) {
-            canvas.drawBitmap(currentBitmap, left, top, null);
-        }
+        canvas.save();
+        canvas.clipRect(new RectF(left, top, right, bottom));
+        canvas.drawBitmap(currentBitmap, left, top, null);
         canvas.restore();
-    }
-
-    private Bitmap buildBitmap(Bitmap source) {
-        Bitmap result = null;
-        float width = source.getWidth() * Math.abs(horizontalFlipValue);
-        float height = source.getHeight() * Math.abs(verticalFlipValue);
-        float x = ((source.getWidth() - width) / 2);
-        float y = ((source.getHeight() - height) / 2);
-        if ((int)width > 0 && (int)height > 0) {
-            result = Bitmap.createBitmap(source, (int) x, (int) y, (int)width, (int)height);
-        }
-        return result;
     }
 }
