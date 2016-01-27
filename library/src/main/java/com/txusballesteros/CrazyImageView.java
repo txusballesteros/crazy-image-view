@@ -79,6 +79,13 @@ public class CrazyImageView extends View {
         initializeView();
     }
 
+    public void revealBackground() {
+        for (RectController controller : rectControllers) {
+            controller.reset();
+            controller.flip(RectController.FLIP_VERTICAL);
+        }
+    }
+
     private void readAttributes(AttributeSet attrs) {
         if (attrs != null) {
             TypedArray attributes = getContext()

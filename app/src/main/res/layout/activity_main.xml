@@ -23,7 +23,7 @@
  *
  * Contact: Txus Ballesteros <txus.ballesteros@gmail.com>
 -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -36,7 +36,15 @@
         app:foregroundSrc="@drawable/foreground"
         app:backgroundSrc="@drawable/android"
         app:dividerSize="1dp"
-        app:columns="10"
-        app:rows="20" />
+        app:columns="15"
+        app:rows="30" />
 
-</FrameLayout>
+    <Button
+        android:id="@+id/reveal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/reveal_background"/>
+
+</RelativeLayout>

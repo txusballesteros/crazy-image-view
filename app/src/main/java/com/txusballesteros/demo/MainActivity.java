@@ -26,11 +26,23 @@ package com.txusballesteros.demo;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
+
+import com.txusballesteros.CrazyImageView;
 
 public class MainActivity extends Activity {
+    private CrazyImageView crazyImageView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        crazyImageView = (CrazyImageView)findViewById(R.id.crazyImageView);
+        findViewById(R.id.reveal).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                crazyImageView.revealBackground();
+            }
+        });
     }
 }

@@ -25,4 +25,5 @@
 -->
 <resources>
     <string name="app_name">Crazy ImageView</string>
+    <string name="reveal_background">Reveal Background</string>
 </resources>

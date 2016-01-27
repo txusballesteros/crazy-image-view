@@ -55,6 +55,11 @@ class RectController {
         return area.contains(x, y);
     }
 
+    void reset() {
+        horizontalFlipValue = -1;
+        verticalFlipValue = -1;
+    }
+
     void flip(int direction) {
         if (!flipInProgress) {
             flipDirection = direction;
