@@ -35,7 +35,7 @@
         app:foregroundSrc="@drawable/foreground"
         app:backgroundSrc="@drawable/background"
         app:dividerSize="0.5dp"
-        app:columns="15"
-        app:rows="30" />
+        app:columns="5"
+        app:rows="10" />
 
 </FrameLayout>

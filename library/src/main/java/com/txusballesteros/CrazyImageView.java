@@ -53,6 +53,7 @@ public class CrazyImageView extends View {
     private Bitmap foregroundBitmap;
     private Bitmap backgroundBitmap;
     private List<RectController> rectControllers = new ArrayList<>();
+    private TouchController touchController;
 
     public CrazyImageView(Context context) {
         super(context);
@@ -104,6 +105,22 @@ public class CrazyImageView extends View {
 
     private void initializeView() {
         setClickable(true);
+        setFocusable(false);
+        setFocusableInTouchMode(false);
+        touchController = new TouchController(new TouchController.TouchEventListener() {
+            @Override
+            public void onTouchCommand(MotionEvent event, int action) {
+                for (int pointer = 0; pointer < event.getPointerCount(); pointer++) {
+                    float eventX = event.getX(pointer);
+                    float eventY = event.getY(pointer);
+                    for (RectController controller : rectControllers) {
+                        if (controller.contains(eventX, eventY)) {
+                            controller.flip(action);
+                        }
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -125,18 +142,7 @@ public class CrazyImageView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_MOVE ||
-            event.getAction() == MotionEvent.ACTION_UP) {
-            for (int pointer = 0; pointer < event.getPointerCount(); pointer++) {
-                float eventX = event.getX(pointer);
-                float eventY = event.getY(pointer);
-                for (RectController controller : rectControllers) {
-                    if (controller.contains(eventX, eventY)) {
-                        controller.flip(RectController.FLIP_HORIZONTAL);
-                    }
-                }
-            }
-        }
+        touchController.onTouchEvent(event);
         return super.onTouchEvent(event);
     }
 

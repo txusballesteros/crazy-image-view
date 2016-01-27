@@ -28,8 +28,6 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.graphics.RectF;
 import android.view.animation.LinearInterpolator;
 
@@ -87,7 +85,7 @@ class RectController {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 verticalFlipValue = (float) animation.getAnimatedValue();
-                owner.invalidate((int) area.left, (int) area.top, (int) area.right, (int) area.bottom);
+                owner.invalidate((int)area.left, (int)area.top, (int)area.right, (int)area.bottom);
             }
         });
         animator.start();
