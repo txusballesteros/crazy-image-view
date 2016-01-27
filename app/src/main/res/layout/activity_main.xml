@@ -33,7 +33,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:foregroundSrc="@drawable/foreground"
-        app:columns="15"
-        app:rows="30" />
+        app:backgroundSrc="@drawable/background"
+        app:dividerSize="3dp"
+        app:columns="5"
+        app:rows="10" />
 
 </FrameLayout>

@@ -28,8 +28,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapRegionDecoder;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
@@ -46,12 +44,14 @@ import java.util.List;
 public class CrazyImageView extends View {
     private final static int DEFAULT_NUM_OF_COLUMNS = 15;
     private final static int DEFAULT_NUM_OF_ROWS = 30;
-    private final static float RECT_PADDING_IN_DP = 1;
+    private final static float DEFAULT_DIVIDER_SIZE_IN_DP = 1;
     private int numOfColumns = DEFAULT_NUM_OF_COLUMNS;
     private int numOfRows = DEFAULT_NUM_OF_ROWS;
-    private float rectPadding = dp2px(RECT_PADDING_IN_DP);
+    private float dividerSizeInPx = dp2px(DEFAULT_DIVIDER_SIZE_IN_DP);
     private Drawable foregroundDrawable;
+    private Drawable backgroundDrawable;
     private Bitmap foregroundBitmap;
+    private Bitmap backgroundBitmap;
     private List<RectController> rectControllers = new ArrayList<>();
 
     public CrazyImageView(Context context) {
@@ -82,12 +82,21 @@ public class CrazyImageView extends View {
         if (attrs != null) {
             TypedArray attributes = getContext()
                     .getTheme().obtainStyledAttributes(attrs, R.styleable.CrazyImageView, 0, 0);
+            dividerSizeInPx = attributes
+                    .getDimension(R.styleable.CrazyImageView_dividerSize, dividerSizeInPx);
             numOfColumns = attributes.getInteger(R.styleable.CrazyImageView_columns, numOfColumns);
             numOfRows = attributes.getInteger(R.styleable.CrazyImageView_rows, numOfRows);
             foregroundDrawable = attributes.getDrawable(R.styleable.CrazyImageView_foregroundSrc);
             if (foregroundDrawable == null) {
-                int defaultForegroundColor = getResources().getColor(R.color.default_foreground_color);
+                int defaultForegroundColor = getResources()
+                        .getColor(R.color.default_foreground_color);
                 foregroundDrawable = new ColorDrawable(defaultForegroundColor);
+            }
+            backgroundDrawable = attributes.getDrawable(R.styleable.CrazyImageView_backgroundSrc);
+            if (backgroundDrawable == null) {
+                int defaultForegroundColor = getResources()
+                        .getColor(R.color.default_background_color);
+                backgroundDrawable = new ColorDrawable(defaultForegroundColor);
             }
             attributes.recycle();
         }
@@ -109,6 +118,7 @@ public class CrazyImageView extends View {
         super.onSizeChanged(width, height, oldw, oldh);
         if (width > 0 && height > 0) {
             buildForegroundBitmap();
+            buildBackgroundBitmap();
             calculateAreas(width, height);
         }
     }
@@ -134,6 +144,8 @@ public class CrazyImageView extends View {
     protected void onDetachedFromWindow() {
         foregroundBitmap.recycle();
         foregroundBitmap = null;
+        backgroundBitmap.recycle();
+        backgroundBitmap = null;
         super.onDetachedFromWindow();
     }
 
@@ -144,22 +156,33 @@ public class CrazyImageView extends View {
         foregroundDrawable.draw(canvas);
     }
 
+    private void buildBackgroundBitmap() {
+        backgroundBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+        final Canvas canvas = new Canvas(backgroundBitmap);
+        backgroundDrawable.setBounds(0, 0, getWidth(), getHeight());
+        backgroundDrawable.draw(canvas);
+    }
+
     private Bitmap getForegroundBitmapRectArea(float x, float y, float width, float height) {
         return Bitmap.createBitmap(foregroundBitmap, (int)x, (int)y, (int)width, (int)height);
     }
 
+    private Bitmap getBackgroundBitmapRectArea(float x, float y, float width, float height) {
+        return Bitmap.createBitmap(backgroundBitmap, (int)x, (int)y, (int)width, (int)height);
+    }
+
     private void calculateAreas(float viewWidth, float viewHeight) {
         rectControllers.clear();
-        float totalHorizontalPadding = rectPadding * (numOfColumns - 1);
-        float totalVerticalPadding = rectPadding * (numOfRows - 1);
+        float totalHorizontalPadding = dividerSizeInPx * (numOfColumns - 1);
+        float totalVerticalPadding = dividerSizeInPx * (numOfRows - 1);
         float rectWidth = ((viewWidth - totalHorizontalPadding) / numOfColumns);
         float rectHeight = ((viewHeight - totalVerticalPadding) / numOfRows);
         float currentX;
         float currentY;
         for (int row = 0; row < numOfRows; row++) {
-            currentY = (rectHeight * row) + (rectPadding * row);
+            currentY = (rectHeight * row) + (dividerSizeInPx * row);
             for (int column = 0; column < numOfColumns; column++) {
-                currentX = (rectWidth * column) + (rectPadding * column);
+                currentX = (rectWidth * column) + (dividerSizeInPx * column);
                 float left = currentX;
                 float top = currentY;
                 float bottom = currentY + rectHeight;
@@ -170,7 +193,12 @@ public class CrazyImageView extends View {
                                                       areaRect.top,
                                                       areaRect.width(),
                                                       areaRect.height());
-                rectControllers.add(new RectController(this, areaRect, foregroundAreaBitmap));
+                final Bitmap backgroundAreaBitmap
+                        = getBackgroundBitmapRectArea(areaRect.left,
+                                                      areaRect.top,
+                                                      areaRect.width(),
+                                                      areaRect.height());
+                rectControllers.add(new RectController(this, areaRect, foregroundAreaBitmap, backgroundAreaBitmap));
             }
         }
     }

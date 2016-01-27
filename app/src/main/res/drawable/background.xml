@@ -23,12 +23,10 @@
  *
  * Contact: Txus Ballesteros <txus.ballesteros@gmail.com>
 -->
-<resources>
-    <declare-styleable name="CrazyImageView">
-        <attr name="columns" format="integer|reference" />
-        <attr name="rows" format="integer|reference" />
-        <attr name="dividerSize" format="dimension|reference" />
-        <attr name="foregroundSrc" format="integer|reference" />
-        <attr name="backgroundSrc" format="integer|reference" />
-    </declare-styleable>
-</resources>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:type="linear"
+        android:angle="90"
+        android:startColor="@color/background_start_color"
+        android:endColor="@color/background_end_color"/>
+</shape>

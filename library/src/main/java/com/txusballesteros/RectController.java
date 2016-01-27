@@ -36,27 +36,19 @@ class RectController {
     final static int FLIP_HORIZONTAL = 1;
     final static int FLIP_VERTICAL = 2;
     private final static int DEFAULT_ANIMATION_DURATION_IN_MS = 300;
-    private final static int DEFAULT_BACKGROUND_COLOR = 0xff1B9494;
-    private int backgroundColor = DEFAULT_BACKGROUND_COLOR;
-    private Paint backgroundPaint;
     private final CrazyImageView owner;
     private final RectF area;
     private final Bitmap foregroundBitmap;
+    private final Bitmap backgroundBitmap;
     private boolean flipInProgress = false;
     private float horizontalFlipValue = -1f;
     private float verticalFlipValue = -1f;
 
-    public RectController(CrazyImageView owner, RectF area, Bitmap foregroundBitmap) {
+    public RectController(CrazyImageView owner, RectF area, Bitmap foregroundBitmap, Bitmap backgroundBitmap) {
         this.owner = owner;
         this.area = area;
         this.foregroundBitmap = foregroundBitmap;
-        initializePaints();
-    }
-
-    private void initializePaints() {
-        backgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        backgroundPaint.setStyle(Paint.Style.FILL);
-        backgroundPaint.setColor(backgroundColor);
+        this.backgroundBitmap = backgroundBitmap;
     }
 
     boolean contains(float x, float y) {
@@ -93,8 +85,8 @@ class RectController {
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                verticalFlipValue = (float)animation.getAnimatedValue();
-                owner.invalidate((int)area.left, (int)area.top, (int)area.right, (int)area.bottom);
+                verticalFlipValue = (float) animation.getAnimatedValue();
+                owner.invalidate((int) area.left, (int) area.top, (int) area.right, (int) area.bottom);
             }
         });
         animator.start();
@@ -122,10 +114,12 @@ class RectController {
             }
 
             @Override
-            public void onAnimationCancel(Animator animation) { }
+            public void onAnimationCancel(Animator animation) {
+            }
 
             @Override
-            public void onAnimationRepeat(Animator animation) { }
+            public void onAnimationRepeat(Animator animation) {
+            }
         });
         return animator;
     }
@@ -136,14 +130,30 @@ class RectController {
         float width = area.width() * Math.abs(horizontalFlipValue);
         float height = area.height() * Math.abs(verticalFlipValue);
         float left = (area.centerX() - (width / 2));
-        float right = (area.centerX() + (width / 2));
         float top = (area.centerY() - (height / 2));
-        float bottom = (area.centerY() + (height / 2));
+        Bitmap currentBitmap;
         if (horizontalFlipValue < 0f && verticalFlipValue < 0f) {
-            canvas.drawBitmap(foregroundBitmap, left, top, null);
+            currentBitmap = buildBitmap(foregroundBitmap);
+//            currentBitmap = foregroundBitmap;
         } else {
-            canvas.drawRect(left, top, right, bottom, backgroundPaint);
+            currentBitmap = buildBitmap(backgroundBitmap);
+//            currentBitmap = backgroundBitmap;
+        }
+        if (currentBitmap != null) {
+            canvas.drawBitmap(currentBitmap, left, top, null);
         }
         canvas.restore();
+    }
+
+    private Bitmap buildBitmap(Bitmap source) {
+        Bitmap result = null;
+        float width = source.getWidth() * Math.abs(horizontalFlipValue);
+        float height = source.getHeight() * Math.abs(verticalFlipValue);
+        float x = ((source.getWidth() - width) / 2);
+        float y = ((source.getHeight() - height) / 2);
+        if (width > 0 && height > 0) {
+            result = Bitmap.createBitmap(source, (int) x, (int) y, (int) width, (int) height);
+        }
+        return result;
     }
 }

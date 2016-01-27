@@ -25,4 +25,5 @@
 -->
 <resources>
     <color name="default_foreground_color">#ffF54900</color>
+    <color name="default_background_color">#ffFA773E</color>
 </resources>
