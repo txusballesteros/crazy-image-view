@@ -62,7 +62,7 @@ public class MainActivity extends Activity {
     private void performSnapshot() {
         Drawable snapshot = SnapshotBuilder.getInstance().takeSnapshot(dataLayout);
         crazyImageView.setForegroundDrawable(snapshot);
-        crazyImageView.setBackgroundDrawable(getDrawable(R.drawable.android_land));
+        crazyImageView.setBackgroundDrawable(R.drawable.android_land);
         dataLayout.setVisibility(View.GONE);
         crazyLayout.setVisibility(View.VISIBLE);
     }

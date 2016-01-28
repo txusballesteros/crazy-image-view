@@ -33,6 +33,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -80,9 +81,21 @@ public class CrazyImageView extends View {
         initializeView();
     }
 
+    public void setForegroundDrawable(@DrawableRes int drawable) {
+        foregroundDrawable = getResources().getDrawable(drawable);
+        buildForegroundBitmap();
+        calculateAreas();
+    }
+
     public void setForegroundDrawable(@NonNull Drawable drawable) {
         foregroundDrawable = drawable;
         buildForegroundBitmap();
+        calculateAreas();
+    }
+
+    public void setBackgroundDrawable(@DrawableRes int drawable) {
+        backgroundDrawable = getResources().getDrawable(drawable);
+        buildBackgroundBitmap();
         calculateAreas();
     }
 

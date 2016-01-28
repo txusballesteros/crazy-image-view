@@ -67,8 +67,8 @@
             app:foregroundSrc="@drawable/foreground"
             app:backgroundSrc="@drawable/android"
             app:dividerSize="1dp"
-            app:columns="5"
-            app:rows="15" />
+            app:columns="@integer/columns"
+            app:rows="@integer/rows" />
 
         <Button
             android:id="@+id/reveal"
