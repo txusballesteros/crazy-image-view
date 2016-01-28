@@ -26,26 +26,57 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background_color">
+    android:layout_height="match_parent">
 
-    <com.txusballesteros.CrazyImageView
-        android:id="@+id/crazyImageView"
+    <LinearLayout
+        android:id="@+id/dataLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:foregroundSrc="@drawable/foreground"
-        app:backgroundSrc="@drawable/android"
-        app:dividerSize="1dp"
-        app:columns="15"
-        app:rows="30" />
+        android:orientation="vertical"
+        android:gravity="top|center_horizontal"
+        android:background="?android:attr/colorBackground"
+        android:padding="8dp">
 
-    <Button
-        android:id="@+id/reveal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:visibility="gone"
-        android:text="@string/reveal_background"/>
+        <TextView style="@style/DummyField" android:text="Dummy Field A"/>
+        <TextView style="@style/DummyField" android:text="Dummy Field B"/>
+        <TextView style="@style/DummyField" android:text="Dummy Field C"/>
+        <TextView style="@style/DummyField" android:text="Dummy Field D"/>
+        <TextView style="@style/DummyField" android:text="Dummy Field E"/>
+        <TextView style="@style/DummyField" android:text="Dummy Field F"/>
+        <TextView style="@style/DummyField" android:text="Dummy Field G"/>
 
+        <Button
+            android:id="@+id/takeSnapshot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/take_snapshot"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/crazyLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background_color"
+        android:visibility="gone">
+
+        <com.txusballesteros.CrazyImageView
+            android:id="@+id/crazyImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:foregroundSrc="@drawable/foreground"
+            app:backgroundSrc="@drawable/android"
+            app:dividerSize="1dp"
+            app:columns="5"
+            app:rows="15" />
+
+        <Button
+            android:id="@+id/reveal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone"
+            android:text="@string/reveal_background"/>
+    </RelativeLayout>
 </RelativeLayout>

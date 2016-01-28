@@ -24,5 +24,11 @@
  * Contact: Txus Ballesteros <txus.ballesteros@gmail.com>
 -->
 <resources>
-    <style name="AppTheme" parent="android:Theme.NoTitleBar" />
+    <style name="AppTheme" parent="android:Theme.Light.NoTitleBar" />
+
+    <style name="DummyField">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">4dp</item>
+    </style>
 </resources>

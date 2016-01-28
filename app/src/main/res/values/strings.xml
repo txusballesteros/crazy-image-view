@@ -26,4 +26,5 @@
 <resources>
     <string name="app_name">Crazy ImageView</string>
     <string name="reveal_background">Reveal Background</string>
+    <string name="take_snapshot">Take Snapshot</string>
 </resources>

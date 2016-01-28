@@ -25,24 +25,45 @@
 package com.txusballesteros.demo;
 
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.txusballesteros.CrazyImageView;
+import com.txusballesteros.demo.instrumentation.SnapshotBuilder;
 
 public class MainActivity extends Activity {
     private CrazyImageView crazyImageView;
+    private ViewGroup crazyLayout;
+    private ViewGroup dataLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         crazyImageView = (CrazyImageView)findViewById(R.id.crazyImageView);
+        dataLayout = (ViewGroup)findViewById(R.id.dataLayout);
+        crazyLayout = (ViewGroup)findViewById(R.id.crazyLayout);
+        findViewById(R.id.takeSnapshot).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                performSnapshot();
+            }
+        });
         findViewById(R.id.reveal).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 crazyImageView.revealBackground();
             }
         });
+    }
+
+    private void performSnapshot() {
+        Drawable snapshot = SnapshotBuilder.getInstance().takeSnapshot(dataLayout);
+        crazyImageView.setForegroundDrawable(snapshot);
+        crazyImageView.setBackgroundDrawable(getDrawable(R.drawable.android_land));
+        dataLayout.setVisibility(View.GONE);
+        crazyLayout.setVisibility(View.VISIBLE);
     }
 }
