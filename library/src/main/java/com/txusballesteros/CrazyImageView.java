@@ -33,6 +33,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -77,6 +78,19 @@ public class CrazyImageView extends View {
         super(context, attrs, defStyleAttr, defStyleRes);
         readAttributes(attrs);
         initializeView();
+    }
+
+    public void setForegroundDrawable(@NonNull Drawable drawable) {
+        foregroundDrawable = drawable;
+        buildForegroundBitmap();
+        calculateAreas();
+    }
+
+    @Override
+    public void setBackgroundDrawable(@NonNull Drawable drawable) {
+        backgroundDrawable = drawable;
+        buildBackgroundBitmap();
+        calculateAreas();
     }
 
     public void revealBackground() {
@@ -140,11 +154,9 @@ public class CrazyImageView extends View {
     @Override
     protected void onSizeChanged(int width, int height, int oldw, int oldh) {
         super.onSizeChanged(width, height, oldw, oldh);
-        if (width > 0 && height > 0) {
-            buildForegroundBitmap();
-            buildBackgroundBitmap();
-            calculateAreas(width, height);
-        }
+        buildForegroundBitmap();
+        buildBackgroundBitmap();
+        calculateAreas();
     }
 
     @Override
@@ -163,14 +175,24 @@ public class CrazyImageView extends View {
     }
 
     private void buildForegroundBitmap() {
-        foregroundBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+        float viewWidth = getMeasuredWidth();
+        float viewHeight = getMeasuredHeight();
+        if (viewWidth <= 0 && viewHeight <= 0) {
+            return;
+        }
+        foregroundBitmap = Bitmap.createBitmap((int)viewWidth, (int)viewHeight, Bitmap.Config.ARGB_8888);
         final Canvas canvas = new Canvas(foregroundBitmap);
         foregroundDrawable.setBounds(0, 0, getWidth(), getHeight());
         foregroundDrawable.draw(canvas);
     }
 
     private void buildBackgroundBitmap() {
-        backgroundBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+        float viewWidth = getMeasuredWidth();
+        float viewHeight = getMeasuredHeight();
+        if (viewWidth <= 0 && viewHeight <= 0) {
+            return;
+        }
+        backgroundBitmap = Bitmap.createBitmap((int)viewWidth, (int)viewHeight, Bitmap.Config.ARGB_8888);
         final Canvas canvas = new Canvas(backgroundBitmap);
         backgroundDrawable.setBounds(0, 0, getWidth(), getHeight());
         backgroundDrawable.draw(canvas);
@@ -184,7 +206,12 @@ public class CrazyImageView extends View {
         return Bitmap.createBitmap(backgroundBitmap, (int)x, (int)y, (int)width, (int)height);
     }
 
-    private void calculateAreas(float viewWidth, float viewHeight) {
+    private void calculateAreas() {
+        float viewWidth = getMeasuredWidth();
+        float viewHeight = getMeasuredHeight();
+        if (viewWidth <= 0 && viewHeight <= 0) {
+            return;
+        }
         rectControllers.clear();
         float totalHorizontalPadding = dividerSizeInPx * (numOfColumns - 1);
         float totalVerticalPadding = dividerSizeInPx * (numOfRows - 1);
