@@ -35,13 +35,15 @@ class RectController {
     final static int FLIP_HORIZONTAL = 1;
     final static int FLIP_VERTICAL = 2;
     private final static int DEFAULT_ANIMATION_DURATION_IN_MS = 300;
+    private static final float ANIMATION_INITIAL_VALUE = -1f;
+    private static final float ANIMATION_END_VALUE = 1f;
     private final CrazyImageView owner;
     private final RectF area;
     private final Bitmap foregroundBitmap;
     private final Bitmap backgroundBitmap;
     private boolean flipInProgress = false;
-    private float horizontalFlipValue = -1f;
-    private float verticalFlipValue = -1f;
+    private float horizontalFlipValue = ANIMATION_INITIAL_VALUE;
+    private float verticalFlipValue = ANIMATION_INITIAL_VALUE;
     private int flipDirection = FLIP_HORIZONTAL;
 
     public RectController(CrazyImageView owner, RectF area, Bitmap foregroundBitmap, Bitmap backgroundBitmap) {
@@ -56,8 +58,8 @@ class RectController {
     }
 
     void reset() {
-        horizontalFlipValue = -1;
-        verticalFlipValue = -1;
+        horizontalFlipValue = ANIMATION_INITIAL_VALUE;
+        verticalFlipValue = ANIMATION_INITIAL_VALUE;
     }
 
     void flip(int direction) {
@@ -79,8 +81,8 @@ class RectController {
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                horizontalFlipValue = (float)animation.getAnimatedValue();
-                owner.invalidate((int)area.left, (int)area.top, (int)area.right, (int)area.bottom);
+                horizontalFlipValue = (float) animation.getAnimatedValue();
+                owner.invalidate((int) area.left, (int) area.top, (int) area.right, (int) area.bottom);
             }
         });
         animator.start();
@@ -92,18 +94,18 @@ class RectController {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 verticalFlipValue = (float) animation.getAnimatedValue();
-                owner.invalidate((int)area.left, (int)area.top, (int)area.right, (int)area.bottom);
+                owner.invalidate((int) area.left, (int) area.top, (int) area.right, (int) area.bottom);
             }
         });
         animator.start();
     }
 
     private ValueAnimator getDefaultAnimator() {
-        float startValue = -1f;
-        float finalValue = 1f;
-        if (horizontalFlipValue == 1f || verticalFlipValue == 1f) {
-            startValue = 1f;
-            finalValue = -1f;
+        float startValue = ANIMATION_INITIAL_VALUE;
+        float finalValue = ANIMATION_END_VALUE;
+        if (horizontalFlipValue == ANIMATION_END_VALUE || verticalFlipValue == ANIMATION_END_VALUE) {
+            startValue = ANIMATION_END_VALUE;
+            finalValue = ANIMATION_INITIAL_VALUE;
         }
         ValueAnimator animator = ValueAnimator.ofFloat(startValue, finalValue);
         animator.setDuration(DEFAULT_ANIMATION_DURATION_IN_MS);
@@ -111,6 +113,11 @@ class RectController {
         animator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
+                if (flipDirection == FLIP_VERTICAL) {
+                    horizontalFlipValue = ANIMATION_INITIAL_VALUE;
+                } else {
+                    verticalFlipValue = ANIMATION_INITIAL_VALUE;
+                }
                 flipInProgress = true;
             }
 
