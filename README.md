@@ -5,6 +5,10 @@ Crazy Image View for Android is a true crazy experiment, offering to the user th
 
 ![](assets/demo.gif)
 
+# Latest Version
+
+[![Download](https://api.bintray.com/packages/txusballesteros/maven/CrazyImageView/images/download.svg) ](https://bintray.com/txusballesteros/maven/CrazyImageView/_latestVersion)
+
 # How to Use
 
 ### 1.- Configuring your project dependencies
@@ -14,7 +18,7 @@ Add the library dependency to your build.gradle file.
 ```groovy
 dependencies {
     ...
-    compile 'com.txusballesteros:CrazyImageView:1.0.0'
+    compile 'com.txusballesteros:CrazyImageView:1.0.1'
 }
 ```
 
