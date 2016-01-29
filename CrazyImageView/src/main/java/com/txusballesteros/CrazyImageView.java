@@ -30,6 +30,7 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -188,27 +189,23 @@ public class CrazyImageView extends View {
     }
 
     private void buildForegroundBitmap() {
-        float viewWidth = getMeasuredWidth();
-        float viewHeight = getMeasuredHeight();
+        int viewWidth = getMeasuredWidth();
+        int viewHeight = getMeasuredHeight();
         if (viewWidth <= 0 && viewHeight <= 0) {
             return;
         }
-        foregroundBitmap = Bitmap.createBitmap((int)viewWidth, (int)viewHeight, Bitmap.Config.ARGB_8888);
-        final Canvas canvas = new Canvas(foregroundBitmap);
-        foregroundDrawable.setBounds(0, 0, getWidth(), getHeight());
-        foregroundDrawable.draw(canvas);
+        foregroundBitmap = ImageCroppingController.getInstance()
+                                            .centerCrop(foregroundDrawable, viewWidth, viewHeight);
     }
 
     private void buildBackgroundBitmap() {
-        float viewWidth = getMeasuredWidth();
-        float viewHeight = getMeasuredHeight();
+        int viewWidth = getMeasuredWidth();
+        int viewHeight = getMeasuredHeight();
         if (viewWidth <= 0 && viewHeight <= 0) {
             return;
         }
-        backgroundBitmap = Bitmap.createBitmap((int)viewWidth, (int)viewHeight, Bitmap.Config.ARGB_8888);
-        final Canvas canvas = new Canvas(backgroundBitmap);
-        backgroundDrawable.setBounds(0, 0, getWidth(), getHeight());
-        backgroundDrawable.draw(canvas);
+        backgroundBitmap = ImageCroppingController.getInstance()
+                                             .centerCrop(backgroundDrawable, viewWidth, viewHeight);
     }
 
     private Bitmap getForegroundBitmapRectArea(float x, float y, float width, float height) {
