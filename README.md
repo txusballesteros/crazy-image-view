@@ -7,7 +7,20 @@ Crazy Image View for Android is a true crazy experiment, offering to the user th
 
 # How to Use
 
-Add the view to your layout.
+### 1.- Configuring your project dependencies
+
+Add the library dependency to your build.gradle file.
+
+```groovy
+dependencies {
+    ...
+    compile 'com.txusballesteros:CrazyImageView:1.0.0'
+}
+```
+
+### 2.- Adding and Customizing the View
+
+Add the view to your xml layout file.
 
 ```xml
 <com.txusballesteros.CrazyImageView
