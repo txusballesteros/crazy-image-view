@@ -37,4 +37,12 @@ ext {
     androidCompileSdkVersion = 23
     androidVersionCode = 1
     androidVersionName = "1.0.0"
+
+    //JCenter
+    jcenterUserOrganinzation = "txusballesteros"
+    jcenterGroupId = "com.txusballesteros"
+    jcenterArtifactId = "CrazyImageView"
+    jcenterWebsite = "https://github.com/txusballesteros"
+    jcenterDescription = "Crazy Image View for Android"
+    jcenterRepository = "https://github.com/txusballesteros/crazy-image-view"
 }
