@@ -181,10 +181,14 @@ public class CrazyImageView extends View {
 
     @Override
     protected void onDetachedFromWindow() {
-        foregroundBitmap.recycle();
-        foregroundBitmap = null;
-        backgroundBitmap.recycle();
-        backgroundBitmap = null;
+        if (foregroundBitmap != null) {
+            foregroundBitmap.recycle();
+            foregroundBitmap = null;
+        }
+        if (backgroundBitmap != null) {
+            backgroundBitmap.recycle();
+            backgroundBitmap = null;
+        }
         super.onDetachedFromWindow();
     }
 
